@@ -24,7 +24,7 @@
         $splitcount = 0;
         $failsplit = false;
         while(!$failsplit){
-            if(random_int(0, 100) <= $settings["splitchance"]){
+            if(random_int(0, 100) <= $settings["splitchance"] && $splitcount < $settings["persplitlimit"]){
                 $splitcount++;
             }
             else{
@@ -35,7 +35,7 @@
             $splitdirection = $splitdirections[rand(0, sizeof($splitdirections) -1)];
             for($i2 = 0; $i2 < rand($settings["minlenght"], $settings["maxlenght"]); $i2++){
                 //$treegrid[$splitpointy + ($i * $splitdirection['y'])][$splitpointx + ($i * $splitdirection['x'])] = "0";
-                $treegrid = setspot($treegrid, $x + ($i2 * $splitdirection['x']), $y + ($i2 * $splitdirection['y']), "0", $settings);
+                $treegrid = setspot($treegrid, $x + ($i2 * $splitdirection['x']), $y + ($i2 * $splitdirection['y']), "<a style='color:green;'>@<a>", $settings);
                 $treegrid = branchout($treegrid, $settings, $x + ($i2 * $splitdirection['x']), $y + ($i2 * $splitdirection['y']), $depth);
             }
         }
@@ -54,7 +54,7 @@
         $currentlocy = $centery;
         
         for($currentlocy; $currentlocy >= $centery - $settings['splitheight']; --$currentlocy){
-            $treegrid[$currentlocy][$currentlocx] = "0";
+            $treegrid[$currentlocy][$currentlocx] = "<a style='color:brown;'>@<a>";
         }
         $splitpointx = $currentlocx;
         $splitpointy = $currentlocy;
@@ -72,7 +72,7 @@
             $splitdirection = $splitdirections[rand(0, sizeof($splitdirections) -1)];
             for($i2 = 0; $i2 < rand(3, 10); $i2++){
                 //$treegrid[$splitpointy + ($i * $splitdirection['y'])][$splitpointx + ($i * $splitdirection['x'])] = "0";
-                $treegrid = setspot($treegrid, $splitpointx + ($i2 * $splitdirection['x']), $splitpointy + ($i2 * $splitdirection['y']), "0", $settings);
+                $treegrid = setspot($treegrid, $splitpointx + ($i2 * $splitdirection['x']), $splitpointy + ($i2 * $splitdirection['y']), "<a style='color:green;'>@<a>", $settings);
                 $treegrid = branchout($treegrid, $settings, $splitpointx + ($i2 * $splitdirection['x']), $splitpointy + ($i2 * $splitdirection['y']), 0);
             }
         }
@@ -88,7 +88,8 @@
         "starty"=>59,//the tree's starting point y (top to bottom)
         "splitheight"=>20,//the height at which the tree will make it's first split
         "initialsplits"=>10,//the amount of branches the first split will make
-        "splitchance"=>20,//the chance in % of all hte next splits
+        "splitchance"=>20,//the chance in % of all the next splits
+        "persplitlimit"=>5,//the maximum splits allowed to be generated in a single step
         "minlenght"=>3,//the minimum lenght of a branch
         "maxlenght"=>5,//the maximum lenght of a branch
         "maxdepth"=>10//the maximum amount of recursions (putting this too high can cause a memory error)
@@ -97,7 +98,7 @@
     $treegrid = [];
     for($y = 0; $y < $settings['height']; $y++){//create full empty grid with space characters
         for($x = 0; $x < $settings['width']; $x++){
-            $treegrid[$y][$x] = " ";
+            $treegrid[$y][$x] = "<a> <a>";
         }
     }
 
